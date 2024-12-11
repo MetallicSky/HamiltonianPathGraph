@@ -11,11 +11,12 @@ void VertexItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsEllipseItem::mousePressEvent(event);  // Propagate the event
 }
 
-VertexItem::VertexItem(int id, const QPointF& pos)
+VertexItem::VertexItem(size_t id, const QPointF& pos)
     : QGraphicsEllipseItem(-10, -10, 20, 20), id(id) {
     setPos(pos);
     setBrush(Qt::yellow);  // Default color
     setPen(QPen(Qt::black, 1));  // Default border
+    setFlag(QGraphicsItem::ItemIgnoresTransformations); // Ignore view scaling
 
     setFlag(ItemIsSelectable, false);  // Disable default selection behavior
 
@@ -37,11 +38,16 @@ void VertexItem::setGrayMode(bool gray) {
     setBrush(gray ? Qt::lightGray : Qt::yellow);
 }
 
+
 EdgeItem::EdgeItem(VertexItem* v1, VertexItem* v2, double weight)
     : v1(v1), v2(v2) {
+    QPen pen = this->pen();
+    pen.setWidthF(1);
+    setPen(pen);
     setLine(QLineF(v1->pos(), v2->pos()));
     QFont font("Arial", 8);
     weightLabel = new QGraphicsTextItem(QString::number(weight), this);
+    weightLabel->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     weightLabel->setFont(font);
     weightLabel->setPos((v1->pos() + v2->pos()) / 2);
     v1->edges.append(this);
@@ -57,23 +63,26 @@ VertexItem* EdgeItem::otherVertex(VertexItem* v) const {
     return v == v1 ? v2 : v1;
 }
 
+void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QPen pen = this->pen();
+    pen.setWidthF(1.0 / painter->transform().m11()); // Adjust width to stay consistent
+    painter->setPen(pen);
+    painter->drawLine(line());
+}
+
 GraphScene::GraphScene(QObject* parent) : QGraphicsScene(parent) {}
 
-void GraphScene::addVertex(int id, const QPointF& pos) {
+void GraphScene::addVertex(size_t id, const QPointF& pos) {
     auto vertex = new VertexItem(id, pos);
     vertex->setZValue(1);  // Ensure nodes are on top
     addItem(vertex);
     vertices[id] = vertex;
 }
 
-void GraphScene::addEdge(int v1Id, int v2Id, double weight) {
+void GraphScene::addEdge(size_t v1Id, size_t v2Id, double weight) {
     auto v1 = vertices.value(v1Id, nullptr);
     auto v2 = vertices.value(v2Id, nullptr);
-
-    if (!v1 || !v2) {
-        qWarning("Invalid vertex IDs passed to addEdge()");
-        return;
-    }
 
     auto edge = new EdgeItem(v1, v2, weight);
     edge->setZValue(0);  // Ensure edges are below nodes

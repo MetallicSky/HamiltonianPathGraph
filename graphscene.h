@@ -11,9 +11,9 @@
 class VertexItem : public QGraphicsEllipseItem {
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
 public:
-    explicit VertexItem(int id, const QPointF& pos);
+    explicit VertexItem(size_t id, const QPointF& pos);
 
-    int id;
+    size_t id;
     QList<class EdgeItem*> edges;
     void setHighlight(bool highlight);
     void setGrayMode(bool gray);
@@ -30,23 +30,39 @@ public:
     void setGrayMode(bool gray);
     VertexItem* otherVertex(VertexItem* v) const;
 
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+
 private:
     VertexItem* v1;
     VertexItem* v2;
     QGraphicsTextItem* weightLabel;
 };
 
+class GraphView : public QGraphicsView {
+public:
+    explicit GraphView(QGraphicsScene* scene) : QGraphicsView(scene) {
+        setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+        setDragMode(QGraphicsView::ScrollHandDrag);
+    }
+
+protected:
+    void wheelEvent(QWheelEvent* event) override {
+        qreal factor = event->angleDelta().y() > 0 ? 1.15 : 0.85;
+        scale(factor, factor);
+    }
+};
+
 class GraphScene : public QGraphicsScene {
     Q_OBJECT
 public:
     GraphScene(QObject* parent = nullptr);
-    void addVertex(int id, const QPointF& pos);
-    void addEdge(int v1, int v2, double weight);
+    void addVertex(size_t id, const QPointF& pos);
+    void addEdge(size_t v1, size_t v2, double weight);
     void updateSelection(VertexItem* vertex);
 
 private:
     VertexItem* previouslySelectedVertex = nullptr;  // Track last selected vertex
-    QMap<int, VertexItem*> vertices;  // Map for ID lookup
+    QMap<size_t, VertexItem*> vertices;  // Map for ID lookup
     VertexItem* selectedVertex = nullptr;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 };

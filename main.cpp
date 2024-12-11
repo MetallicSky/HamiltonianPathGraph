@@ -7,19 +7,7 @@
 #include <QDebug>
 #include <QMainWindow>
 
-class GraphView : public QGraphicsView {
-public:
-    explicit GraphView(QGraphicsScene* scene) : QGraphicsView(scene) {
-        setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-        setDragMode(QGraphicsView::ScrollHandDrag);
-    }
 
-protected:
-    void wheelEvent(QWheelEvent* event) override {
-        qreal factor = event->angleDelta().y() > 0 ? 1.15 : 0.85;
-        scale(factor, factor);
-    }
-};
 
 
 int main(int argc, char *argv[])
@@ -51,7 +39,7 @@ int main(int argc, char *argv[])
     */
 
     QApplication app(argc, argv);
-    QMainWindow mainWindow;
+    MainWindow mainWindow;
     auto* scene = new GraphScene();
     for (int i = 0; i < 5; ++i) {
         scene->addVertex(i, QPointF(i * 50, 0));
@@ -60,9 +48,10 @@ int main(int argc, char *argv[])
     scene->addEdge(1, 2, 20);
     scene->addEdge(2, 3, 30);
     scene->addEdge(3, 4, 40);
-    auto* view = new GraphView(scene);
-    mainWindow.setCentralWidget(view);
-    mainWindow.resize(800, 600);
+
+    //auto* view = new GraphView(scene);
+    //mainWindow.setCentralWidget(view);
+    //mainWindow.resize(800, 600);
     mainWindow.show();
 
     return app.exec();
