@@ -149,7 +149,7 @@ void CoordGraphBuilder::printEdges() const
     }
 }
 
-vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, const size_t finish, const size_t pathAmount) const
+vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, const size_t finish, const size_t pathAmount)
 {
     const int graphSize = myGraph.getWeights(0).size();
     isValidInt(start, 0, graphSize - 1);
@@ -169,11 +169,17 @@ vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, 
          [](const auto& a, const auto& b) { return a.first < b.first; });
 
     // Extract paths
-    vector<vector<size_t>> paths;
+    paths.clear();
     for (size_t i = 0; i < min(pathAmount, results.size()); ++i) {
         paths.emplace_back(results[i].second);
     }
     return paths;
+}
+
+vector<size_t> CoordGraphBuilder::getPath(const size_t pNum) const
+{
+    isValidInt(pNum, 0, paths.size() - 1);
+    return paths[pNum];
 }
 
 const CoordGraph CoordGraphBuilder::getGraph() const
@@ -227,4 +233,31 @@ void CoordGraphBuilder::printPath(const vector<size_t> &path) const
         qDebug().noquote().nospace() << "[" << path[i] << "] - " << myGraph.getWeight(path[i], path[i + 1]) << " - ";
     }
     qDebug().noquote().nospace() << "[" << path[path.size() - 1] << "]";
+}
+
+string CoordGraphBuilder::pathToString(const size_t id) const
+{
+    vector<size_t> path = getPath(id);
+    string output = "";
+    output += "Total: " + to_string(totalWeight(path)) + "\n";
+    for (size_t i = 0; i < path.size() -1; i++) {
+        output += "[" + to_string(path[i]) + "] - " + to_string(myGraph.getWeight(path[i], path[i + 1])) + " - ";
+    }
+    output += "[" + to_string(path[path.size() - 1]) + "]";
+
+    return output;
+}
+
+void CoordGraphBuilder::clear()
+{
+    myGraph.clear();
+}
+
+void CoordGraphBuilder::repopulate(int n)
+{
+    isValidInt(n);
+    myGraph.clear();
+    for (size_t i = 0; i < n; i++) {
+        myGraph.addVertex();
+    }
 }

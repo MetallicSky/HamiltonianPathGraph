@@ -14,6 +14,7 @@
 class CoordGraphBuilder
 {
     CoordGraph myGraph;
+    vector<vector<size_t> > paths;
 
     void isValidInt(const int number, const int min = 1, const size_t max = 0 - 1) const;
     void dfs(size_t current, size_t end, vector<size_t>& path,
@@ -31,7 +32,9 @@ public:
 
     void printEdges() const;
 
-    [[nodiscard]] vector<vector<size_t> > hamiltonianPaths(const size_t start, const size_t finish, const size_t pathAmount) const; // Finds all unique paths from start to finish that visit all vertices once
+    [[nodiscard]] vector<vector<size_t> > hamiltonianPaths(const size_t start, const size_t finish, const size_t pathAmount); // Finds all unique paths from start to finish that visit all vertices once
+
+    [[nodiscard]] vector<size_t> getPath(const size_t pNum) const;
 
     const CoordGraph getGraph() const;
 
@@ -40,6 +43,12 @@ public:
     [[nodiscard]] int totalWeight(const vector<size_t>& path) const;
 
     void printPath(const vector<size_t>& path) const;
+
+    [[nodiscard]] string pathToString(const size_t id) const;
+
+    void clear();
+
+    void repopulate(int n);
 };
 
 #endif // COORDGRAPHBUILDER_H

@@ -8,6 +8,8 @@
 #include <QMap>
 #include <QGraphicsSceneMouseEvent>
 
+using std::vector;
+
 class VertexItem : public QGraphicsEllipseItem {
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
 public:
@@ -59,6 +61,7 @@ public:
     void addVertex(size_t id, const QPointF& pos);
     void addEdge(size_t v1, size_t v2, double weight);
     void updateSelection(VertexItem* vertex);
+    void selectPath(vector<size_t> path);
 
 private:
     VertexItem* previouslySelectedVertex = nullptr;  // Track last selected vertex

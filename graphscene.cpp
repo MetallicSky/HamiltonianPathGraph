@@ -118,6 +118,35 @@ void GraphScene::updateSelection(VertexItem* vertex) {
     }
 }
 
+void GraphScene::selectPath(vector<size_t> path)
+{
+    // Clear the previous selection
+    for (auto item : items()) {
+        if (auto v = dynamic_cast<VertexItem*>(item)) {
+            v->setHighlight(false);       // Reset highlight for all vertices
+            v->setGrayMode(true);         // Gray out all vertices initially
+        }
+        if (auto e = dynamic_cast<EdgeItem*>(item)) {
+            e->setGrayMode(true);         // Gray out all edges initially
+        }
+    }
+
+    for (size_t i = 0; i < path.size() - 1; i++) {
+        auto v1 = vertices.value(path[i], nullptr);
+        // v1->setHighlight(true);
+        // v1->setGrayMode(false);
+        auto v2 = vertices.value(path[i + 1], nullptr);
+        // v2->setHighlight(true);
+        // v2->setGrayMode(false);
+        for (size_t j = 0; j < v1->edges.size(); j++) {
+            if (v1->edges[j]->otherVertex(v1) == v2) {
+                v1->edges[j]->setGrayMode(false);
+                break;
+            }
+        }
+    }
+}
+
 // Override mousePressEvent to handle selection
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     // Check if the clicked item is a vertex
