@@ -27,6 +27,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         graph.h graph.cpp
         coordgraph.h coordgraph.cpp
         coordgraphbuilder.h coordgraphbuilder.cpp
+        graphscene.h graphscene.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET 100VerticesGraph APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

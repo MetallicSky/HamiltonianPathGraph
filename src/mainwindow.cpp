@@ -6,13 +6,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    scene = new GraphScene(this);
-
-    // Use the existing QGraphicsView from the UI as a GraphView
-    ui->graphicsView->setScene(scene);
-
-
 }
 
 MainWindow::~MainWindow()

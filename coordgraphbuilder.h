@@ -36,6 +36,10 @@ public:
     const CoordGraph getGraph() const;
 
     [[nodiscard]] bool isConnected() const; // BFS to check connectivity
+
+    [[nodiscard]] int totalWeight(const vector<size_t>& path) const;
+
+    void printPath(const vector<size_t>& path) const;
 };
 
 #endif // COORDGRAPHBUILDER_H

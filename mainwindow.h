@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "graphscene.h"
 #include <QMainWindow>
+#include <QGraphicsScene>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,5 +21,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    GraphScene* scene;
 };
 #endif // MAINWINDOW_H
