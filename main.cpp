@@ -40,14 +40,6 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     MainWindow mainWindow;
-    auto* scene = new GraphScene();
-    for (int i = 0; i < 5; ++i) {
-        scene->addVertex(i, QPointF(i * 50, 0));
-    }
-    scene->addEdge(0, 1, 10);
-    scene->addEdge(1, 2, 20);
-    scene->addEdge(2, 3, 30);
-    scene->addEdge(3, 4, 40);
 
     //auto* view = new GraphView(scene);
     //mainWindow.setCentralWidget(view);

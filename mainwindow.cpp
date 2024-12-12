@@ -103,7 +103,7 @@ void MainWindow::on_comboBox_pStart_currentIndexChanged(int index)
     if (ui->comboBox_pFinish->currentIndex() == index) {
         ui->pushButton_calculate->setEnabled(false);
     }
-    else {
+    else if (graphBuilder->isConnected()) {
         ui->pushButton_calculate->setEnabled(true);
     }
 }
@@ -114,7 +114,7 @@ void MainWindow::on_comboBox_pFinish_currentIndexChanged(int index)
     if (ui->comboBox_pStart->currentIndex() == index) {
         ui->pushButton_calculate->setEnabled(false);
     }
-    else {
+    else if (graphBuilder->isConnected()) {
         ui->pushButton_calculate->setEnabled(true);
     }
 }
@@ -129,7 +129,8 @@ void MainWindow::on_pushButton_calculate_clicked()
         ui->comboBox_pNum->addItem("T: " + QString::number(graphBuilder->totalWeight(paths[i])));
     }
     ui->textEdit_console->clear();
-    ui->textEdit_console->setText(QString::number(paths.size()) + " paths was found. Choose which one to display");
+    QString data = QString::fromStdString(graphBuilder->pathToString(0));
+    ui->textEdit_console->setText(QString::number(paths.size()) + " paths was found. Choose which one to display at bottom-right corner. Shortest one:\n" + data);
 }
 
 
