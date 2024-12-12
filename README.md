@@ -15,3 +15,4 @@
 5. Check any of the generated paths - both by highlighted edges and information in built-in console
 6. Click on any vertex to see what it's connected to
 7. Zoom in or out as you like, pan the camera by holding LMB
+8. Ready to use Graph data type with various methods, checks and operator overloads 
