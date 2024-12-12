@@ -16,3 +16,14 @@
 6. Click on any vertex to see what it's connected to
 7. Zoom in or out as you like, pan the camera by holding LMB
 8. Ready to use Graph data type with various methods, checks and operator overloads 
+
+## Clone and build
+
+```
+git clone https://github.com/MetallicSky/HamiltonianPathGraph.git
+cd HamiltonianPathGraph
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build . --config Release
+```
