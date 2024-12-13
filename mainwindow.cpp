@@ -124,13 +124,25 @@ void MainWindow::on_pushButton_calculate_clicked()
 {
     ui->comboBox_pNum->setEnabled(true);
     ui->comboBox_pNum->clear();
-    vector< vector < size_t > > paths = graphBuilder->hamiltonianPaths(ui->comboBox_pStart->currentIndex(), ui->comboBox_pFinish->currentIndex(), ui->spinBox_pAmount->value());
+    vector< vector < size_t > > paths;
+    try {
+        paths = graphBuilder->hamiltonianPaths(ui->comboBox_pStart->currentIndex(), ui->comboBox_pFinish->currentIndex(), ui->spinBox_pAmount->value());
+    }
+    catch (const char* error_message) {
+        ui->textEdit_console->clear();
+        ui->textEdit_console->setText("Something went wrong...");
+        return;
+    }
+
     for (size_t i = 0; i < paths.size(); i++) {
         ui->comboBox_pNum->addItem("T: " + QString::number(graphBuilder->totalWeight(paths[i])));
     }
     ui->textEdit_console->clear();
-    QString data = QString::fromStdString(graphBuilder->pathToString(0));
-    ui->textEdit_console->setText(QString::number(paths.size()) + " paths was found. Choose which one to display at bottom-right corner. Shortest one:\n" + data);
+    ui->textEdit_console->setText(QString::number(paths.size()) + " paths was found.");
+    if (paths.size() != 0) {
+        QString data = QString::fromStdString(graphBuilder->pathToString(0));
+        ui->textEdit_console->setText(ui->textEdit_console->toPlainText() + " Choose which one to display at bottom-right corner." + " Shortest one:\n" + data);
+    }
 }
 
 

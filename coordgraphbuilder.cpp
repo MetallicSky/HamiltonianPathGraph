@@ -81,15 +81,19 @@ void CoordGraphBuilder::connectGraph(const size_t min, const size_t max)
 
     // For each vertex, we will find its closest vertices
     for (size_t i = 0; i < vCount; ++i) {
+        int connections = rand()%(max-min + 1) + min;
+        if (connections == 0) {
+            continue;
+        }
         vector<pair<size_t, int>> distances;
 
+        if (myGraph.edgesAmount(i) >= max ) { // If i  vertex already reached max amount of edges, skip
+            continue;
+        }
         // Calculate the distance from vertex i to all other vertices
         for (size_t j = 0; j < vCount; ++j) {
             if (i == j || myGraph.edgesAmount(j) >= max) { // Skip the connection to itself or if j already has max connections
                 continue;
-            }
-            if (myGraph.edgesAmount(i) >= max ) { // once i  vertex reaches max amount of edges, skip
-                break;
             }
             bool duplicate = false;
             vector<pair<size_t, int> > iEdges = myGraph.getEdges(i);
@@ -111,28 +115,24 @@ void CoordGraphBuilder::connectGraph(const size_t min, const size_t max)
 
             distances.emplace_back(j, dist);
         }
-        if (myGraph.edgesAmount(i) >= max) { // once i vertex reaches max amount of edges, skip
-            continue;
-        }
 
         // Sort distances in ascending order
         std::sort(distances.begin(), distances.end(), [](const pair<size_t, int>& a, const std::pair<size_t, int>& b) {
             return a.second < b.second;  // Sort by the distance (second element)
         });
 
-        int connections = rand()%(max-min + 1) + min;
         // Connect the closest vertices (2-6 closest)
-        for (size_t j = 0; j < connections && j < distances.size(); j++) {
-            if (myGraph.edgesAmount(i) >= max) { // once i vertex reaches max amount of edges, stop
-                break;
-            }
-            if (myGraph.edgesAmount(j) >= max) { // once j vertex reaches max amount of edges, skip
+        for (size_t j = 0; j < distances.size(); j++) {
+            const size_t destination = distances[j].first;
+            if (myGraph.edgesAmount(distances[j].first) >= max) { // if destination vertex already reached max amount of edges, skip
                 continue;
             }
-            size_t closestVertex = distances[j].first;
             int weight = sqrt(distances[j].second);
 
-            myGraph.setWeight(i, closestVertex, weight);
+            myGraph.setWeight(i, destination, weight);
+            if (myGraph.edgesAmount(i) >= connections) { // once i vertex reaches max amount of edges, stop
+                break;
+            }
         }
     }
 }
