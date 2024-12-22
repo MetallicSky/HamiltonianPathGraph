@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(HamiltonianPathGraph VERSION 0.1 LANGUAGES CXX)
 
-
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
@@ -13,61 +11,59 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+# Add include directory
+include_directories(include)
+
+# Explicitly organize sources and headers
+set(SRC_FILES
+    src/main.cpp
+    src/mainwindow.cpp
+    src/graph.cpp
+    src/coordgraph.cpp
+    src/coordgraphbuilder.cpp
+    src/graphscene.cpp
 )
 
+set(HEADER_FILES
+    include/mainwindow.h
+    include/graph.h
+    include/coordgraph.h
+    include/coordgraphbuilder.h
+    include/graphscene.h
+)
+
+set(UI_FILES
+    ui/mainwindow.ui
+)
+
+# Add all files to the executable
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(HamiltonianPathGraph
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        graph.h graph.cpp
-        coordgraph.h coordgraph.cpp
-        coordgraphbuilder.h coordgraphbuilder.cpp
-        graphscene.h graphscene.cpp
+        ${SRC_FILES}
+        ${HEADER_FILES}
+        ${UI_FILES}
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET HamiltonianPathGraph APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
-    if(ANDROID)
-        add_library(HamiltonianPathGraph SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(HamiltonianPathGraph
-            ${PROJECT_SOURCES}
-        )
-    endif()
+    add_executable(HamiltonianPathGraph
+        ${SRC_FILES}
+        ${HEADER_FILES}
+        ${UI_FILES}
+    )
 endif()
 
+# Link Qt libraries
 target_link_libraries(HamiltonianPathGraph PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.HamiltonianPathGraph)
-endif()
+# Add logical groups (hide folder structure in IDE)
+source_group("Sources" FILES ${SRC_FILES})
+source_group("Headers" FILES ${HEADER_FILES})
+source_group("UI" FILES ${UI_FILES})
+
+# Set properties
 set_target_properties(HamiltonianPathGraph PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
-)
-
-include(GNUInstallDirs)
-install(TARGETS HamiltonianPathGraph
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
