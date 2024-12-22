@@ -40,10 +40,6 @@ private slots:
 
     void on_comboBox_pNum_currentIndexChanged(int index);
 
-    void on_spinBox_pAmount_valueChanged(int arg1);
-
-    void on_pushButton_reconnect_clicked();
-
 private:
     Ui::MainWindow *ui = nullptr;
     GraphScene* scene = nullptr;
