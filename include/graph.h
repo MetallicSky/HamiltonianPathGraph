@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using std::vector;
 using std::cout;
@@ -27,6 +28,8 @@ public:
 
     virtual void addVertex(const size_t index); // Creates new vertex at specified position and adjusts matrix
     virtual size_t addVertex(); // Creates new vertex at the end, adjusts matrix and returns its index
+
+    void clearWeights(); // Removes all edges
 
     virtual size_t eraseVertex(const size_t index, size_t n = 1); // Deletes n (1 if not specified) vertices starting from index, returns remaining vertices amount
     virtual void popVertex(); // Deletes last vertex and associated edges

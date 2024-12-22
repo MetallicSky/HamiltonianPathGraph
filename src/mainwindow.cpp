@@ -73,7 +73,7 @@ void MainWindow::on_pushButton_generate_clicked()
 
 void MainWindow::on_spinBox_vNum_valueChanged(int arg1)
 {
-    ui->spinBox_eMax->setMaximum(arg1);
+    ui->spinBox_eMax->setMaximum(arg1 - 1);
 
     ui->comboBox_pStart->clear();
     ui->comboBox_pFinish->clear();
@@ -125,8 +125,11 @@ void MainWindow::on_pushButton_calculate_clicked()
     ui->comboBox_pNum->setEnabled(true);
     ui->comboBox_pNum->clear();
     vector< vector < size_t > > paths;
+    const size_t pStart = ui->comboBox_pStart->currentIndex();
+    const size_t pEnd = ui->comboBox_pFinish->currentIndex();
+
     try {
-        paths = graphBuilder->hamiltonianPaths(ui->comboBox_pStart->currentIndex(), ui->comboBox_pFinish->currentIndex(), ui->spinBox_pAmount->value());
+        paths = graphBuilder->hamiltonianPaths(pStart, pEnd);
     }
     catch (const char* error_message) {
         ui->textEdit_console->clear();
@@ -135,7 +138,7 @@ void MainWindow::on_pushButton_calculate_clicked()
     }
 
     for (size_t i = 0; i < paths.size(); i++) {
-        ui->comboBox_pNum->addItem("T: " + QString::number(graphBuilder->totalWeight(paths[i])));
+        ui->comboBox_pNum->addItem(QString::number(i + 1) + ") T: " + QString::number(graphBuilder->totalWeight(paths[i])));
     }
     ui->textEdit_console->clear();
     ui->textEdit_console->setText(QString::number(paths.size()) + " paths was found.");

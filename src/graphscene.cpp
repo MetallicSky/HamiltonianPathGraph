@@ -147,6 +147,15 @@ void GraphScene::selectPath(vector<size_t> path)
     }
 }
 
+void GraphScene::clearEdges()
+{
+    for (auto item : items()) {
+        if (auto e = dynamic_cast<EdgeItem*>(item)) {
+            removeItem(e);
+        }
+    }
+}
+
 // Override mousePressEvent to handle selection
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     // Check if the clicked item is a vertex

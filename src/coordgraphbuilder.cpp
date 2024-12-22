@@ -14,7 +14,7 @@ void CoordGraphBuilder::isValidInt(const int number, const int min, const size_t
     }
 }
 
-void CoordGraphBuilder::dfs(size_t current, size_t end, vector<size_t> &path, vector<bool> &visited, int currentDist, vector<pair<int, vector<size_t> > > &results) const
+void CoordGraphBuilder::dfs(size_t current, size_t end, vector<size_t> &path, vector<bool> &visited, int currentDist, vector<pair<int, vector<size_t> > > &results) const // Helper method for hamiltonianPaths()
 {
     size_t n = myGraph.size();
     if (current == end && path.size() == n) {
@@ -43,6 +43,8 @@ void CoordGraphBuilder::fillCircle(const pair<int, int> &center, const int radiu
     isValidInt(amount, 1, myGraph.size());
     isValidInt(center.first - radius, 0);
     isValidInt(center.second - radius, 0);
+
+    paths.clear();
 
     std::set<pair<int, int>> coords;
 
@@ -73,7 +75,7 @@ void CoordGraphBuilder::fillCircle(const int x, const int y, const int radius, c
     fillCircle(center, radius, amount);
 }
 
-void CoordGraphBuilder::connectGraph(const size_t min, const size_t max)
+void CoordGraphBuilder::connectGraph(const size_t min, const size_t max) // Attempts to give every vertex between min and max edges
 {
     isValidInt(min, 0, max);
     isValidInt(max, min, myGraph.getWeights(0).size());
@@ -137,7 +139,7 @@ void CoordGraphBuilder::connectGraph(const size_t min, const size_t max)
     }
 }
 
-void CoordGraphBuilder::printEdges() const
+void CoordGraphBuilder::printEdges() const // prints edges in Qt console (debug)
 {
     for (int i = 0; i < myGraph.size(); i++) {
         vector<pair<size_t, int> > v = myGraph.getEdges(i);
@@ -149,12 +151,11 @@ void CoordGraphBuilder::printEdges() const
     }
 }
 
-vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, const size_t finish, const size_t pathAmount)
+vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, const size_t finish) // Finds all unique paths from start to finish that visit all vertices once
 {
     const int graphSize = myGraph.getWeights(0).size();
     isValidInt(start, 0, graphSize - 1);
     isValidInt(finish, 0, graphSize - 1);
-    isValidInt(pathAmount, 1);
 
 
     vector<pair<int, vector<size_t>>> results;
@@ -170,24 +171,34 @@ vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, 
 
     // Extract paths
     paths.clear();
-    for (size_t i = 0; i < min(pathAmount, results.size()); ++i) {
+    for (size_t i = 0; i < results.size(); ++i) {
         paths.emplace_back(results[i].second);
     }
     return paths;
 }
 
-vector<size_t> CoordGraphBuilder::getPath(const size_t pNum) const
+const vector<vector<size_t> > CoordGraphBuilder::getPaths() const
+{
+    return paths;
+}
+
+vector<size_t> CoordGraphBuilder::getPath(const size_t pNum) const // Get specified path
 {
     isValidInt(pNum, 0, paths.size() - 1);
     return paths[pNum];
 }
 
-const CoordGraph CoordGraphBuilder::getGraph() const
+size_t CoordGraphBuilder::pathsSize() const // Get paths amount
+{
+    return paths.size();
+}
+
+const CoordGraph CoordGraphBuilder::getGraph() const // Returns copy of myGraph
 {
     return myGraph;
 }
 
-bool CoordGraphBuilder::isConnected() const
+bool CoordGraphBuilder::isConnected() const // BFS to check connectivity
 {
     size_t n = myGraph.size();
     if (n == 0) {
@@ -205,7 +216,7 @@ bool CoordGraphBuilder::isConnected() const
         size_t current = q.front();
         q.pop();
 
-        for (size_t i = 0; i < n; ++i) {
+        for (size_t i = 0; i < n; i++) {
             if (myGraph.getWeight(current, i) != -1 && !visited[i]) {
                 visited[i] = true;
                 q.push(i);
@@ -217,7 +228,7 @@ bool CoordGraphBuilder::isConnected() const
     return visitedCount == n;
 }
 
-int CoordGraphBuilder::totalWeight(const vector<size_t> &path) const
+int CoordGraphBuilder::totalWeight(const vector<size_t> &path) const // Returns total distance (weight) of a given path
 {
     int total = 0;
     for (size_t i = 0; i < path.size() -1; i++) {
@@ -226,18 +237,25 @@ int CoordGraphBuilder::totalWeight(const vector<size_t> &path) const
     return total;
 }
 
-void CoordGraphBuilder::printPath(const vector<size_t> &path) const
+void CoordGraphBuilder::printPath(const vector<size_t> &path) const // Print given path to Qt console (debug)
 {
-    qDebug().noquote() << "Total: " << totalWeight(path) << "\n";
-    for (size_t i = 0; i < path.size() -1; i++) {
-        qDebug().noquote().nospace() << "[" << path[i] << "] - " << myGraph.getWeight(path[i], path[i + 1]) << " - ";
-    }
-    qDebug().noquote().nospace() << "[" << path[path.size() - 1] << "]";
+    qDebug().noquote().nospace() << pathToString(path);
 }
 
-string CoordGraphBuilder::pathToString(const size_t id) const
+void CoordGraphBuilder::printPath(const size_t id) const
 {
     vector<size_t> path = getPath(id);
+    printPath(path);
+}
+
+string CoordGraphBuilder::pathToString(const size_t id) const // Returns given path as string
+{
+    vector<size_t> path = getPath(id);
+    return pathToString(path);
+}
+
+string CoordGraphBuilder::pathToString(const vector<size_t> &path) const
+{
     string output = "";
     output += "Total: " + to_string(totalWeight(path)) + "\n";
     for (size_t i = 0; i < path.size() -1; i++) {
@@ -248,15 +266,17 @@ string CoordGraphBuilder::pathToString(const size_t id) const
     return output;
 }
 
-void CoordGraphBuilder::clear()
+
+void CoordGraphBuilder::clear() // delete all vertices, edges and paths
 {
     myGraph.clear();
+    paths.clear();
 }
 
-void CoordGraphBuilder::repopulate(int n)
+void CoordGraphBuilder::repopulate(int n) // Call clear() and create n vertices
 {
     isValidInt(n);
-    myGraph.clear();
+    clear();
     for (size_t i = 0; i < n; i++) {
         myGraph.addVertex();
     }

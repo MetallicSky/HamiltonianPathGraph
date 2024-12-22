@@ -69,6 +69,15 @@ size_t Graph::addVertex()  // Creates new vertex at the end, adjusts matrix and 
     return lastIndex;
 }
 
+void Graph::clearWeights() // Removes all edges
+{
+    for (size_t i = 0; i < adjMatrix.size(); i++) {
+        for (size_t i = 0; i < adjMatrix.size(); i++) {
+            std::fill(adjMatrix[i].begin(), adjMatrix[i].end(), -1);
+        }
+    }
+}
+
 size_t Graph::eraseVertex(const size_t index, size_t n) // Deletes n (1 if not specified) vertices starting from index
 {
     isValid(index);

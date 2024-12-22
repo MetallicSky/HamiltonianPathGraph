@@ -62,6 +62,7 @@ public:
     void addEdge(size_t v1, size_t v2, double weight);
     void updateSelection(VertexItem* vertex);
     void selectPath(vector<size_t> path);
+    void clearEdges();
 
 private:
     VertexItem* previouslySelectedVertex = nullptr;  // Track last selected vertex
