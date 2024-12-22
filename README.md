@@ -4,7 +4,7 @@
 
 [Depth-first search algorithm (Wikipedia)](https://en.wikipedia.org/wiki/Depth-first_search)
 
-![presentation3](https://github.com/user-attachments/assets/fc41b4d1-3f14-4c1f-8d7f-f94da3bf764e)
+![presentation3](https://github.com/user-attachments/assets/c9032607-6b8f-4b81-982f-d81194c018c6)
 
 ## Core features:
 
