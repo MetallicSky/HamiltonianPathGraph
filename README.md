@@ -1,4 +1,4 @@
-WIP - current page isn't updated for Ideal Path Finder yet
+# ❗ WIP - current page isn't updated for Ideal Path Finder yet ❗
 
 # Hamiltonian Path Graph
 
