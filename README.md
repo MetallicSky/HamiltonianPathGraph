@@ -1,3 +1,5 @@
+WIP - current page isn't updated for Ideal Path Finder yet
+
 # Hamiltonian Path Graph
 
 [Hamiltonian path (Wikipedia)](https://en.wikipedia.org/wiki/Hamiltonian_path)
