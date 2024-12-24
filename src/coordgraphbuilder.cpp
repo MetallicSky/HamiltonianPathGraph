@@ -14,20 +14,42 @@ void CoordGraphBuilder::isValidInt(const int number, const int min, const size_t
     }
 }
 
-void CoordGraphBuilder::dfs(size_t current, size_t end, vector<size_t> &path, vector<bool> &visited, int currentDist, vector<pair<int, vector<size_t> > > &results) const // Helper method for hamiltonianPaths()
+void CoordGraphBuilder::dfs(size_t current, size_t end, vector<size_t> &path, vector<bool> &visited, int currentDist, vector<pair<int, vector<size_t> > > &results, int ideal, int margin) // Helper method for hamiltonianPaths()
 {
     size_t n = myGraph.size();
+    /*
     if (current == end && path.size() == n) {
         results.emplace_back(currentDist, path);
         return;
     }
+    */
+
+    if (currentDist > ideal + margin) { // If  we're already past upper margin of error, retrack (assuming negative weight isn't possible)
+        return;
+    }
+    if (current == end) { // If goal vertex reached
+        // path.push_back(current); // Temporarily add goal vertex to path
+        if (currentDist == ideal) { // If ideal distance already reached - write into idealPath and stop dfs
+            idealPath = path;
+            return;
+        }
+        else { // If
+            // path.pop_back();
+            if (currentDist < ideal - margin ) { // If total weight is not within margin of error, retrack (upper margin was checked previously)
+                return;
+            }
+            results.emplace_back(currentDist, path); // Since path is within margin of error, add it to results
+            return;
+        }
+    }
+
 
     for (size_t next = 0; next < n; ++next) {
         int weight = myGraph.getWeight(current, next);
         if (weight != -1 && !visited[next]) {
             visited[next] = true;
             path.emplace_back(next);
-            dfs(next, end, path, visited, currentDist + weight, results);
+            dfs(next, end, path, visited, currentDist + weight, results, ideal, margin);
             path.pop_back();
             visited[next] = false;
         }
@@ -151,7 +173,7 @@ void CoordGraphBuilder::printEdges() const // prints edges in Qt console (debug)
     }
 }
 
-vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, const size_t finish) // Finds all unique paths from start to finish that visit all vertices once
+vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, const size_t finish, const int ideal, const int margin) // Finds all unique paths from start to finish that visit all vertices once
 {
     const int graphSize = myGraph.getWeights(0).size();
     isValidInt(start, 0, graphSize - 1);
@@ -163,7 +185,13 @@ vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, 
     vector<bool> visited(graphSize, false);
     visited[start] = true;
 
-    dfs(start, finish, path, visited, 0, results);
+    dfs(start, finish, path, visited, 0, results, ideal, margin);
+    if (idealPath.size() != 0) {
+        paths.clear();
+        paths.emplace_back(idealPath);
+        return paths;
+    }
+
 
     // Sort paths by distance
     sort(results.begin(), results.end(),

@@ -38,7 +38,7 @@ private slots:
 
     void on_pushButton_calculate_clicked();
 
-    void on_comboBox_pNum_currentIndexChanged(int index);
+    void on_comboBox_pNum_activated(int index, bool clear = true);
 
 private:
     Ui::MainWindow *ui = nullptr;

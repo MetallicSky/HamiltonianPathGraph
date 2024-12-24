@@ -15,10 +15,10 @@ class CoordGraphBuilder
 {
     CoordGraph myGraph;
     vector<vector<size_t> > paths; // Since calculating paths is expensive, they are stored and only cleared when vertices / edges are changed in any way
-
+    vector<size_t> idealPath;
     void isValidInt(const int number, const int min = 1, const size_t max = 0 - 1) const;
     void dfs(size_t current, size_t end, vector<size_t>& path,
-             vector<bool>& visited, int currentDist, vector<pair<int, vector<size_t>>>& results) const; // Helper method for hamiltonianPaths()
+             vector<bool>& visited, int currentDist, vector<pair<int, vector<size_t>>>& results, int ideal, int margin); // Helper method for hamiltonianPaths()
 public:
     CoordGraphBuilder(){}
     CoordGraphBuilder(int n)
@@ -32,7 +32,7 @@ public:
 
     void printEdges() const; // prints edges in Qt console (debug)
 
-    vector<vector<size_t> > hamiltonianPaths(const size_t start, const size_t finish); // Finds all unique paths from start to finish that visit all vertices once
+    vector<vector<size_t> > hamiltonianPaths(const size_t start, const size_t finish, const int ideal, const int margin); // Finds all unique paths from start to finish that visit all vertices once
 
     [[nodiscard]] const vector<vector<size_t> > getPaths() const; // Get all paths
 

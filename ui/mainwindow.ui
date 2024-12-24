@@ -156,13 +156,13 @@
     <property name="geometry">
      <rect>
       <x>680</x>
-      <y>430</y>
+      <y>290</y>
       <width>201</width>
-      <height>311</height>
+      <height>451</height>
      </rect>
     </property>
     <property name="title">
-     <string>Hamiltonian paths</string>
+     <string>Find your ideal path TODAY</string>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget_2">
      <property name="geometry">
@@ -170,7 +170,7 @@
        <x>10</x>
        <y>30</y>
        <width>181</width>
-       <height>271</height>
+       <height>411</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_p">
@@ -187,7 +187,7 @@
       <item>
        <widget class="QLabel" name="label_pStart">
         <property name="text">
-         <string>H. path start</string>
+         <string>Path start</string>
         </property>
        </widget>
       </item>
@@ -197,12 +197,52 @@
       <item>
        <widget class="QLabel" name="label_pStart_pFinish">
         <property name="text">
-         <string>H. path finish</string>
+         <string>Path finish</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QComboBox" name="comboBox_pFinish"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_ideal">
+        <property name="text">
+         <string>Ideal weight (distance)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_ideal">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100000</number>
+        </property>
+        <property name="value">
+         <number>2500</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_margin">
+        <property name="text">
+         <string>Margin of error</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_margin">
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>100000</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_calculate">

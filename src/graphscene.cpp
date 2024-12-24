@@ -131,16 +131,16 @@ void GraphScene::selectPath(vector<size_t> path)
         }
     }
 
+    vertices.value(path[0], nullptr)->setGrayMode(false); // Highlight very first vertex
+    vertices.value(path[0], nullptr)->setHighlight(true);
+    vertices.value(path[path.size() - 1], nullptr)->setHighlight(true); // Also highlight very last vertex for easier navigation
     for (size_t i = 0; i < path.size() - 1; i++) {
         auto v1 = vertices.value(path[i], nullptr);
-        // v1->setHighlight(true);
-        // v1->setGrayMode(false);
         auto v2 = vertices.value(path[i + 1], nullptr);
-        // v2->setHighlight(true);
-        // v2->setGrayMode(false);
         for (size_t j = 0; j < v1->edges.size(); j++) {
             if (v1->edges[j]->otherVertex(v1) == v2) {
                 v1->edges[j]->setGrayMode(false);
+                v2->setGrayMode(false); // Paint vertex where edge leads to
                 break;
             }
         }
