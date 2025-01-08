@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     on_pushButton_generate_clicked();
 
     on_spinBox_vNum_valueChanged(ui->spinBox_vNum->value());
+    this->setWindowTitle("Ideal path finder");
 }
 
 
@@ -154,9 +155,15 @@ void MainWindow::on_pushButton_calculate_clicked()
     if (paths.size() == 1) {
         ui->textEdit_console->setText("Your ideal path have been found: ");
     }
+    else if (paths.size() == 0) {
+        ui->textEdit_console->setText("No paths were found with given parameters\n");
+        ui->comboBox_pNum->setEnabled(false);
+        return;
+    }
     else {
         ui->textEdit_console->setText("Ideal path wasn't found, however, " + QString::number(paths.size()) + " paths were found within margin of error.\nChoose which one to display at bottom-right corner. Shortest one:\n");
     }
+    ui->comboBox_pNum->setEnabled(true);
     on_comboBox_pNum_activated(0, false);
 }
 

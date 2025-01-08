@@ -185,6 +185,7 @@ vector<vector<size_t> > CoordGraphBuilder::hamiltonianPaths(const size_t start, 
     vector<bool> visited(graphSize, false);
     visited[start] = true;
 
+    idealPath.clear();
     dfs(start, finish, path, visited, 0, results, ideal, margin);
     if (idealPath.size() != 0) {
         paths.clear();
